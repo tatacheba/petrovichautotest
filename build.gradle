@@ -7,44 +7,55 @@ repositories {
     mavenCentral()
 }
 
-compileTestJava {
-    options.encoding = 'UTF-8'
-}
+def selenideVersion = "6.3.5",
+    junitVersion = "5.8.2",
+    slf4jVersion = "1.7.36",
+    javaFakerVersion = "1.0.2",
+    allureSelenideVersion = "2.17.3",
+    allureRestAssuredVersion = "2.17.3",
+    ownerVersion = "1.0.12",
+    restAssuredVersion = "4.5.1",
+    assertjVersion = "3.22.0",
+    jsonPathVersion = "2.7.0"
 
-dependencies {
-    testImplementation(
-            'org.selenide:selenide-selenoid:2.2.1',
-            'com.codeborne:selenide:6.3.4',
-            'io.qameta.allure:allure-selenide:2.17.3',
-            'org.junit.jupiter:junit-jupiter:5.8.2',
-            'org.assertj:assertj-core:3.22.0',
-            'com.codeborne:pdf-test:1.7.0',
-            "org.aeonbits.owner:owner:1.0.12",
-    )
-    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.8.2',
-            'org.slf4j:slf4j-simple:1.7.36')
-}
-
+group 'qa.guru.allure'
+version '1.0-SNAPSHOT'
 
 allure {
+    report {
+        version.set(allureSelenideVersion)
+    }
     adapter {
         aspectjWeaver.set(true)
         frameworks {
             junit5 {
-                adapterVersion.set("2.17.2")
+                adapterVersion.set(allureSelenideVersion)
             }
         }
+    }
+}
 
-    }
-    report {
-        version.set("2.17.2")
-    }
+dependencies {
+    testImplementation(
+            "com.codeborne:selenide:$selenideVersion",
+            "com.github.javafaker:javafaker:$javaFakerVersion",
+            "io.qameta.allure:allure-selenide:$allureSelenideVersion",
+            "io.qameta.allure:allure-rest-assured:$allureRestAssuredVersion",
+            "org.junit.jupiter:junit-jupiter-api:$junitVersion",
+            "org.aeonbits.owner:owner:$ownerVersion",
+            "io.rest-assured:rest-assured:$restAssuredVersion",
+            "io.rest-assured:json-schema-validator:$restAssuredVersion",
+            "org.assertj:assertj-core:$assertjVersion",
+            "com.jayway.jsonpath:json-path:$jsonPathVersion"
+    )
+    testRuntimeOnly(
+            "org.slf4j:slf4j-simple:$slf4jVersion",
+            "org.junit.jupiter:junit-jupiter-engine:$junitVersion")
 }
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
-
 
 tasks.withType(Test) {
     systemProperties(System.getProperties())
